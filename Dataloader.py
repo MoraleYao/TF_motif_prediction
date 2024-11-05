@@ -113,7 +113,7 @@ class buildGraph(DGLDataset):
                 xyz_feats = xyz_feats[:len(nodeFeats)]
             self.tgt = tgt # '4zm2_B'，蛋白名，来自input.list
             self.nodeFeats = nodeFeats # torch.Size([61, 5461]), 节点特征，来自processed_features/
-            self.xyz_feats = xyz_feats #torch.Size([61, 3]), z坐标，来自input/
+            self.xyz_feats = xyz_feats #torch.Size([61, 3]), 节点坐标，来自input/
             self.edge_att = trc.LongTensor(w) #torch.Size([850, 1]), 边的权重，来自distmaps/
             self.edges = [trc.LongTensor(edges[0]), trc.LongTensor(edges[1])] # torch.Size([850]), torch.Size([850]), 边的source和destination，来自distmaps/
             self.data_feats.append((self.tgt, self.nodeFeats, self.xyz_feats, self.edges, self.edge_att))

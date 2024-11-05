@@ -57,7 +57,7 @@ class E_GCL(nn.Module):
             out = torch.cat([source, target, radial], dim=1)
         else:
             out = torch.cat([source, target, radial, edge_attr], dim=1)
-        out = self.edge_mlp(out)
+        out = self.edge_mlp(out) # torch.Size([96, 66]) - torch.Size([96, 32])
         if self.attention:
             att_val = self.att_mlp(out)
             out = out * att_val
@@ -65,26 +65,26 @@ class E_GCL(nn.Module):
 
     def node_model(self, x, edge_index, edge_attr, node_attr):
         row, col = edge_index
-        agg = unsorted_segment_sum(edge_attr, row, num_segments=x.size(0))
+        agg = unsorted_segment_sum(edge_attr, row, num_segments=x.size(0)) # 将边特征聚合到节点
         if node_attr is not None:
             agg = torch.cat([x, agg, node_attr], dim=1)
         else:
             agg = torch.cat([x, agg], dim=1)
         out = self.node_mlp(agg)
         if self.residual:
-            out = x + out
+            out = x + out # 聚合到节点特征
         return out, agg
 
     def coord_model(self, coord, edge_index, coord_diff, edge_feat):
         row, col = edge_index
-        trans = coord_diff * self.coord_mlp(edge_feat)
+        trans = coord_diff * self.coord_mlp(edge_feat) # 用边特征更新坐标
         if self.coords_agg == 'sum':
-            agg = unsorted_segment_sum(trans, row, num_segments=coord.size(0))
+            agg = unsorted_segment_sum(trans, row, num_segments=coord.size(0)) # 将坐标差聚合到节点
         elif self.coords_agg == 'mean':
             agg = unsorted_segment_mean(trans, row, num_segments=coord.size(0))
         else:
             raise Exception('Wrong coords_agg parameter' % self.coords_agg)
-        coord = coord + agg
+        coord = coord + agg # 聚合到节点坐标
         return coord
 
     def coord2radial(self, edge_index, coord):
@@ -98,13 +98,13 @@ class E_GCL(nn.Module):
 
         return radial, coord_diff
 
-    def forward(self, h, edge_index, coord, edge_attr=None, node_attr=None):
+    def forward(self, h, edge_index, coord, edge_attr=None, node_attr=None): # 过四个模块
         row, col = edge_index
-        radial, coord_diff = self.coord2radial(edge_index, coord)
+        radial, coord_diff = self.coord2radial(edge_index, coord) # 求边的坐标差的三维平方和，以及坐标差。torch.Size([96, 1]), torch.Size([96, 3])
 
-        edge_feat = self.edge_model(h[row], h[col], radial, edge_attr)
-        coord = self.coord_model(coord, edge_index, coord_diff, edge_feat)
-        h, agg = self.node_model(h, edge_index, edge_feat, node_attr)
+        edge_feat = self.edge_model(h[row], h[col], radial, edge_attr) # 用边的起点终点的特征，距离和边权重计算边特征
+        coord = self.coord_model(coord, edge_index, coord_diff, edge_feat) # 用边特征更新节点坐标
+        h, agg = self.node_model(h, edge_index, edge_feat, node_attr) # 用边特征更新节点特征
 
         return h, coord, edge_attr
 
@@ -144,7 +144,7 @@ class EGNN(nn.Module):
                                                 normalize=normalize, tanh=tanh))
         self.to(self.device)
 
-    def forward(self, h, x, edges, edge_attr):
+    def forward(self, h, x, edges, edge_attr): # 把h embed为hidden_nf维度，然后进行n_layers层GCL的迭代
         h = self.embedding_in(h)
         for i in range(0, self.n_layers):
             h, x, _ = self._modules["gcl_%d" % i](h, edges, x, edge_attr=edge_attr)
@@ -152,11 +152,11 @@ class EGNN(nn.Module):
         return h, x
 
 
-def unsorted_segment_sum(data, segment_ids, num_segments):
+def unsorted_segment_sum(data, segment_ids, num_segments): # 边特征，边起点，节点数量
     result_shape = (num_segments, data.size(1))
     result = data.new_full(result_shape, 0)  # Init empty result tensor.
-    segment_ids = segment_ids.unsqueeze(-1).expand(-1, data.size(1))
-    result.scatter_add_(0, segment_ids, data)
+    segment_ids = segment_ids.unsqueeze(-1).expand(-1, data.size(1)) # 将 segment_ids 扩展成与 data 维度一致的形状，以与 data 对应元素匹配
+    result.scatter_add_(0, segment_ids, data) # 将 data 中的值按 segment_ids 指定的索引位置聚合到 result 中，实现分组求和。
     return result
 
 
@@ -171,6 +171,7 @@ def unsorted_segment_mean(data, segment_ids, num_segments):
 
 
 def get_edges(n_nodes):
+    # 用于生成测试数据
     rows, cols = [], []
     for i in range(n_nodes):
         for j in range(n_nodes):
@@ -183,6 +184,7 @@ def get_edges(n_nodes):
 
 
 def get_edges_batch(n_nodes, batch_size):
+    # 用于生成测试数据
     edges = get_edges(n_nodes)
     edge_attr = torch.ones(len(edges[0]) * batch_size, 1)
     edges = [torch.LongTensor(edges[0]), torch.LongTensor(edges[1])]
@@ -205,9 +207,9 @@ if __name__ == "__main__":
     x_dim = 3
 
     # Dummy variables h, x and fully connected edges
-    h = torch.ones(batch_size *  n_nodes, n_feat)
-    x = torch.ones(batch_size * n_nodes, x_dim)
-    edges, edge_attr = get_edges_batch(n_nodes, batch_size)
+    h = torch.ones(batch_size *  n_nodes, n_feat) # torch.Size([32, 1]), torch.float32
+    x = torch.ones(batch_size * n_nodes, x_dim) # torch.Size([32, 3]), torch.float32
+    edges, edge_attr = get_edges_batch(n_nodes, batch_size) # [torch.Size([96]), torch.Size([96])], torch.int64. torch.Size([96, 1]), torch.float32
 
     # Initialize EGNN
     egnn = EGNN(in_node_nf=n_feat, hidden_nf=32, out_node_nf=1, in_edge_nf=1)

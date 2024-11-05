@@ -45,6 +45,7 @@ def test_epoch(epoch, model, dataloader, PARS):
 
     rloss = 0
     for i, (data_feats) in enumerate(dataloader):
+        # 提取数据
         (tgt_name, nodeFeats, xyz_feats, edges, edge_att) = data_feats
         tgt_name  = tgt_name[0] # 第一个纬度是batch_size，因为是1所以去掉
         #print(tgt_name)
@@ -63,6 +64,7 @@ def test_epoch(epoch, model, dataloader, PARS):
         edge_att = edge_att.squeeze()
         edge_att = edge_att.unsqueeze(dim=1)
 
+        # 预测
         pred, xyz = model(nodeFeats, xyz_feats, edges, edge_att)
         pred = torch.nn.Sigmoid()(pred) 
         pred = pred.detach().numpy()
