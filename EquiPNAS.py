@@ -46,7 +46,7 @@ def test_epoch(epoch, model, dataloader, PARS):
     rloss = 0
     for i, (data_feats) in enumerate(dataloader):
         (tgt_name, nodeFeats, xyz_feats, edges, edge_att) = data_feats
-        tgt_name  = tgt_name[0]
+        tgt_name  = tgt_name[0] # 第一个纬度是batch_size，因为是1所以去掉
         #print(tgt_name)
         print('running ' + tgt_name + ' ...')
         n_nodes = len(nodeFeats[0])
@@ -56,7 +56,7 @@ def test_epoch(epoch, model, dataloader, PARS):
         edges[0] = edges[0].to(PARS.device)
         edges[1] = edges[1].to(PARS.device)
         edge_att = edge_att.to(PARS.device)
-        nodeFeats = nodeFeats.squeeze()
+        nodeFeats = nodeFeats.squeeze() # 第一个纬度是batch_size，因为是1所以去掉
         xyz_feats = xyz_feats.squeeze()
         edges[0] = edges[0].squeeze()
         edges[1] = edges[1].squeeze()

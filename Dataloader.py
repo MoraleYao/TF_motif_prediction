@@ -32,7 +32,7 @@ class buildGraph(DGLDataset):
         f = open(testlist, 'r')
         flines = f.readlines()
         f.close()
-        for line in flines:
+        for line in flines: # 每次从input.list中提取一个蛋白名，提取处理对应的特征和距离矩阵
             tgt = line.split('.')[0]
             #tgt = tgt.strip()
             labels = []
@@ -111,11 +111,11 @@ class buildGraph(DGLDataset):
                 print(len(xyz_feats))
                 nodeFeats = nodeFeats[:len(xyz_feats)]
                 xyz_feats = xyz_feats[:len(nodeFeats)]
-            self.tgt = tgt
-            self.nodeFeats = nodeFeats
-            self.xyz_feats = xyz_feats
-            self.edge_att = trc.LongTensor(w)
-            self.edges = [trc.LongTensor(edges[0]), trc.LongTensor(edges[1])]
+            self.tgt = tgt # '4zm2_B'，蛋白名，来自input.list
+            self.nodeFeats = nodeFeats # torch.Size([61, 5461]), 节点特征，来自processed_features/
+            self.xyz_feats = xyz_feats #torch.Size([61, 3]), z坐标，来自input/
+            self.edge_att = trc.LongTensor(w) #torch.Size([850, 1]), 边的权重，来自distmaps/
+            self.edges = [trc.LongTensor(edges[0]), trc.LongTensor(edges[1])] # torch.Size([850]), torch.Size([850]), 边的source和destination，来自distmaps/
             self.data_feats.append((self.tgt, self.nodeFeats, self.xyz_feats, self.edges, self.edge_att))
 
             
