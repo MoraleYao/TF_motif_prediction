@@ -1,0 +1,80 @@
+*   9abdc37 Merge branch 'main' of /home/jyao42/data_pcahan1/jyao42 into main
+|\  
+| * 016d74a Initial commit
+* ab9bb6e 注释模型结构
+* 3864594 注释输入数据的形式
+* 4cae6da Update README.md
+* cb77390 Update README.md
+* 2b26c75 Update README.md
+* 8fa2a8d Update README.md
+* ff7f27a Update README.md
+* db22729 Update README.md
+* d06b6be Add files via upload
+* 10f115e Delete EquiPNAS.png
+* 2f0f8a0 Add files via upload
+* bb4f38a Delete EquiPNAS.png
+* 4062eef Add files via upload
+* 11b11c2 Delete EquiPNAS.png
+* caff899 Add files via upload
+* 0d8d027 Delete EquiPNAS.png
+* 79425f8 Update README.md
+* 475d0de Update README.md
+* 26da94a Update README.md
+* 9b0a3ef Update MSA_first_row_readme.md
+* 249a518 Add files via upload
+* f9229b7 Update README.md
+* 034a981 Update README.md
+* fcad770 Delete models directory
+* f1482ca Update Dataloader.py
+* d1d640a Update egnn_clean.py
+* 4bf1a0c Add files via upload
+* ac0ae69 Add files via upload
+* 1819246 Update README.md
+* b5535cf Update EquiPNAS.py
+* ffb93c3 Update EquiPNAS.py
+* 1d81e20 Update README.md
+* d579435 Update readme.md
+* 30de2f4 Update MSA_first_row_readme.md
+* 5da7f9a Update readme.md
+* 2f7a007 Update readme.md
+* 3e54ac8 Delete ESM2_feature_readme.md
+* f5814a1 Add files via upload
+* fbb8a64 Create tmp
+* 80b21f7 Update ESM-2_representation_readme.md
+* 7af22eb Update PSSM_readme.md
+* 6e6c2ad Update MSA_first_row_readme.md
+* f716144 Update DSSP_readme.md
+* ac7e7d1 Add files via upload
+* a0098ef Add files via upload
+* 4dc26db Add files via upload
+* a5a0065 Update input.list
+* 211fcd7 Update readme.md
+* 0f8a542 Update readme.md
+* aea442f Update readme.md
+* 0fe6288 Create tmp
+* f11e1e0 Create tmp
+* 00e51a8 Create tmp
+* d4e41dc Create tmp
+* d568adb Add files via upload
+* 8de0df5 Create readme.md
+* 5d7835e Update MSA_first_row_readme.md
+* 57778b1 Update MSA_first_row_readme.md
+* a5cf1e6 Update MSA_first_row_readme.md
+* 2e7a5f7 Create MSA_first_row_readme.md
+* e9bbf1f Create ESM-2_representation_readme.md
+* b780d95 Add files via upload
+* a256928 Update EquiPNAS.py
+* 7107e65 Add files via upload
+* 3603fdf Update README.md
+* a4cbd2c Update README.md
+* 8976a39 Update README.md
+* ce0d336 Update README.md
+* 9590fa7 Update README.md
+* de6cc18 Update README.md
+* 56e270c Create readme
+* e0803ac Create readme
+* 056d1a2 Update README.md
+* a4068f8 Add files via upload
+* da70781 Update README.md
+* 0295b23 Update README.md
+* 56f0345 Initial commit
